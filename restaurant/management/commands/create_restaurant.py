@@ -8,6 +8,7 @@ from restaurant.models import (
     MenuItem,
     Order,
     OrderItem,
+    RestaurantType,
     Review,
     Contact,
 )
@@ -18,7 +19,12 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         for _ in range(10):
+            RestaurantType.objects.create(
+                name=get_random_string(5),
+            )
+
             Restaurant.objects.create(
+                restautant_type=RestaurantType.objects.order_by("?").first(),
                 name=get_random_string(5),
                 address=get_random_string(5),
                 phone=get_random_string(5),

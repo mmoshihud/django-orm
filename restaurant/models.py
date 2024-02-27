@@ -1,7 +1,15 @@
 from django.db import models
 
 
+class RestaurantType(models.Model):
+    name = models.CharField(max_length=100, blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Restaurant(models.Model):
+    restautant_type = models.ForeignKey(RestaurantType, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, blank=True, null=True)
     address = models.CharField(max_length=100, blank=True, null=True)
     phone = models.CharField(max_length=100, blank=True, null=True)
