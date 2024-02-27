@@ -1,7 +1,6 @@
 from django.core.management.base import BaseCommand
 from django.utils.crypto import get_random_string
 
-5
 from restaurant.models import (
     Restaurant,
     Menu,
@@ -18,13 +17,13 @@ class Command(BaseCommand):
     help = "Create random data for the database"
 
     def handle(self, *args, **kwargs):
-        for _ in range(10):
-            RestaurantType.objects.create(
+        for _ in range(100):
+            restaurant_type = RestaurantType.objects.create(
                 name=get_random_string(5),
             )
 
-            Restaurant.objects.create(
-                restautant_type=RestaurantType.objects.order_by("?").first(),
+            restaurant = Restaurant.objects.create(
+                restautant_type=restaurant_type,
                 name=get_random_string(5),
                 address=get_random_string(5),
                 phone=get_random_string(5),
@@ -34,20 +33,20 @@ class Command(BaseCommand):
             )
 
             Menu.objects.create(
-                restaurant=Restaurant.objects.order_by("?").first(),
+                restaurant=restaurant,
                 name=get_random_string(5),
                 description=get_random_string(5),
             )
 
             MenuItem.objects.create(
-                menu=Menu.objects.order_by("?").first(),
+                menu=Menu.objects.filter(restaurant=restaurant).first(),
                 name=get_random_string(5),
                 description=get_random_string(5),
                 price=10.00,
             )
 
-            Order.objects.create(
-                restaurant=Restaurant.objects.order_by("?").first(),
+            order = Order.objects.create(
+                restaurant=restaurant,
                 name=get_random_string(5),
                 address=get_random_string(5),
                 phone=get_random_string(5),
@@ -56,13 +55,13 @@ class Command(BaseCommand):
             )
 
             OrderItem.objects.create(
-                order=Order.objects.order_by("?").first(),
-                menu_item=MenuItem.objects.order_by("?").first(),
+                order=order,
+                menu_item=MenuItem.objects.filter(menu__restaurant=restaurant).first(),
                 quantity=1,
             )
 
             Review.objects.create(
-                restaurant=Restaurant.objects.order_by("?").first(),
+                restaurant=restaurant,
                 name=get_random_string(5),
                 email=f"{get_random_string(5)}@gmail.com",
                 rating=1,
@@ -70,7 +69,7 @@ class Command(BaseCommand):
             )
 
             Contact.objects.create(
-                restaurant=Restaurant.objects.order_by("?").first(),
+                restaurant=restaurant,
                 name=get_random_string(5),
                 email=f"{get_random_string(5)}@gmail.com",
                 message=get_random_string(5),
