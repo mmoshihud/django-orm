@@ -24,6 +24,8 @@ from product.views import CategoryViewSet, ProductDetailViewSet, ProductListView
 from django.conf import settings
 from django.conf.urls.static import static
 
+from restaurant.views import RestaurantListView
+
 
 router = DefaultRouter()
 router.register(r"category", CategoryViewSet)
@@ -33,6 +35,8 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include(router.urls)),
     path("api/product/", ProductListView.as_view()),
+    path("restaurant/", RestaurantListView.as_view()),
+    path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path("api/docs/", SpectacularSwaggerView.as_view(url_name="schema")),
     path("__debug__/", include("debug_toolbar.urls")),

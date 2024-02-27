@@ -40,7 +40,7 @@ class Place(models.Model):
         return f"{self.name} the place"
 
 
-class Restaurant(models.Model):
+class RestaurantInPerson(models.Model):
     place = models.OneToOneField(
         Place,
         on_delete=models.CASCADE,
@@ -54,7 +54,7 @@ class Restaurant(models.Model):
 
 
 class Waiter(models.Model):
-    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
+    restaurant = models.ForeignKey(RestaurantInPerson, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
 
     def __str__(self):

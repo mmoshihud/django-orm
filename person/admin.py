@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Dream, Person, Group, Membership, Place, Restaurant, Waiter
+from .models import Dream, Person, Group, Membership, Place, RestaurantInPerson, Waiter
 
 
 class GroupInline(admin.TabularInline):
@@ -40,7 +40,7 @@ class PlaceAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(Restaurant)
+@admin.register(RestaurantInPerson)
 class RestaurantAdmin(admin.ModelAdmin):
     pass
 
