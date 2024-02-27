@@ -77,7 +77,7 @@ class ProductAttributeValue(models.Model):
     product = models.ForeignKey(
         "Product",
         on_delete=models.CASCADE,
-        related_name="producte_value_pl",
+        related_name="product_attribute_value",
     )
 
     class Meta:

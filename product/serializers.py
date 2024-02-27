@@ -84,11 +84,10 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
-        # print(data)
         av_data = data.pop("attribute_value")
-        attr_values = []
+        attr_values = {}
         for key in av_data:
-            attr_values.append({key["attribute"]["name"]: key["attribute_value"]})
+            attr_values.update({key["attribute"]["name"]: key["attribute_value"]})
         data.update({"attribute": attr_values})
 
         return data

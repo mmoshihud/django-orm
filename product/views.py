@@ -3,9 +3,16 @@ from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from django.db.models import Count
+from django.db.models import Count, F
 
-from .models import Category, Product, ProductImage, ProductLine
+from .models import (
+    AttributeValue,
+    Category,
+    Product,
+    ProductImage,
+    ProductLine,
+    Attribute,
+)
 from rest_framework.generics import ListAPIView
 from .serializers import (
     CategorySerializer,
@@ -13,6 +20,7 @@ from .serializers import (
     ProductSerializer,
     ProductListSerializer,
 )
+from django.db import connection, reset_queries
 
 
 class CategoryViewSet(viewsets.ViewSet):
@@ -29,16 +37,21 @@ class CategoryViewSet(viewsets.ViewSet):
 
 
 class ProductListView(ListAPIView):
+    # queryset = Product.objects.all()
     queryset = (
         Product.objects.select_related("category", "product_type")
         .prefetch_related(
+            "product_line__product_image",
             "product_line__attribute_value__attribute",
             "attribute_value__attribute",
         )
         .all()
     )
-    # queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        return response
 
 
 class ProductDetailViewSet(viewsets.ViewSet):
