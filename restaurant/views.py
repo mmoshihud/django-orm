@@ -8,7 +8,12 @@ from django.db.models import Prefetch, OuterRef
 class RestaurantListView(ListAPIView):
     serializer_class = RestaurantListSerializer
     queryset = Restaurant.objects.select_related("restautant_type").prefetch_related(
-        "menu_set", "order_set", "review_set", "contact_set"
+        "menu_set",
+        "order_set",
+        "review_set",
+        "contact_set",
+        "order_set__orderitem_set",
+        "menu_set__menuitem_set",
     )
     # queryset = Restaurant.objects.filter(pk=1).select_related(
     #     "restautant_type"

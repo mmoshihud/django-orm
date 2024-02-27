@@ -1,6 +1,15 @@
 from rest_framework import serializers
 
-from restaurant.models import Contact, Menu, Order, Restaurant, RestaurantType, Review
+from restaurant.models import (
+    Contact,
+    Menu,
+    MenuItem,
+    Order,
+    OrderItem,
+    Restaurant,
+    RestaurantType,
+    Review,
+)
 
 
 class RetaurantTypeSerializer(serializers.ModelSerializer):
@@ -15,13 +24,29 @@ class RestaurantSlimSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class RestaurantMenuItemsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MenuItem
+        fields = "__all__"
+
+
 class RestaurantMenuSerializer(serializers.ModelSerializer):
+    menu_items = RestaurantMenuItemsSerializer(source="menuitem_set", many=True)
+
     class Meta:
         model = Menu
         fields = "__all__"
 
 
+class OrderItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderItem
+        fields = "__all__"
+
+
 class OrderSerializer(serializers.ModelSerializer):
+    order_items = OrderItemSerializer(source="orderitem_set", many=True)
+
     class Meta:
         model = Order
         fields = "__all__"

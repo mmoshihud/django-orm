@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "drf_spectacular",
     "restaurant",
+    "django_extensions",
 ]
 
 MIDDLEWARE = [
