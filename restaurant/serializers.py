@@ -65,6 +65,8 @@ class RestaurantMenuSerializer(serializers.ModelSerializer):
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
+    menu_item = RestaurantMenuItemsSerializer()
+
     class Meta:
         model = OrderItem
         fields = "__all__"

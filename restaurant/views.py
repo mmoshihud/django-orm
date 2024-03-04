@@ -7,10 +7,11 @@ from django.db.models import Prefetch, OuterRef
 
 class RestaurantListView(ListAPIView):
     serializer_class = RestaurantListSerializer
-    # queryset = Restaurant.objects.all()
     queryset = Restaurant.objects.select_related("restautant_type").prefetch_related(
         "menu_set",
         "order_set",
+        "order_set__orderitem_set__menu_item__menu_item_type",
+        "order_set__orderitem_set__menu_item",
         "review_set",
         "contact_set",
         "order_set__orderitem_set",
@@ -19,9 +20,23 @@ class RestaurantListView(ListAPIView):
         "menu_set__dish__ingredients",
         "menu_set__menuitem_set__menu_item_type",
     )
+
+    # queryset = Restaurant.objects.all()
+
+    # queryset = Restaurant.objects.select_related("restautant_type").prefetch_related(
+    #     "menu_set__dish__ingredients",
+    #     "menu_set__menuitem_set__menu_item_type",
+    #     "order_set",
+    #     "order_set__orderitem_set__menu_item__menu_item_type",
+    #     "review_set",
+    #     "contact_set",
+    # )
+
     # queryset = Restaurant.objects.filter(pk=1).select_related(
     #     "restautant_type"
     # ) # This is how you can optimize to use select_related is enough if queryset returns only one object
+
+    # After all if you put same data in 2 serializer there will be obhiously 2 similer query occur. So, optimize serializer first then optimize queryset
 
 
 class RestaurantDetailView(RetrieveAPIView):
