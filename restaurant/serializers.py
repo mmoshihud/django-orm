@@ -57,7 +57,7 @@ class RestaurantMenuItemsSerializer(serializers.ModelSerializer):
 
 class RestaurantMenuSerializer(serializers.ModelSerializer):
     menu_items = RestaurantMenuItemsSerializer(source="menuitem_set", many=True)
-    dishes = DishSerializer(source="dish", many=True)
+    dish = DishSerializer(many=True)
 
     class Meta:
         model = Menu
@@ -86,6 +86,15 @@ class ReviewSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class GoodReviewSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    restaurant = serializers.CharField()
+    name = serializers.CharField()
+    email = serializers.EmailField()
+    rating = serializers.IntegerField()
+    review = serializers.CharField()
+
+
 class ContactSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contact
@@ -93,11 +102,15 @@ class ContactSerializer(serializers.ModelSerializer):
 
 
 class RestaurantListSerializer(serializers.ModelSerializer):
+    total_reviews = serializers.IntegerField()
+    good_reviews_count = serializers.IntegerField()
+    bad_reviews_count = serializers.IntegerField()
+    average_rating = serializers.FloatField()
     menu = RestaurantMenuSerializer(source="menu_set", many=True)
     restautant_type = RetaurantTypeSerializer()
     order = OrderSerializer(source="order_set", many=True)
-    review = ReviewSerializer(source="review_set", many=True)
     contact = ContactSerializer(source="contact_set", many=True)
+    good_reviews = GoodReviewSerializer(many=True)
 
     """If you want to include different field for retaurant type, you can do it like this: 
     any_name = serializers.RetaurantTypeSerializer(source="restautant_type")"""
@@ -105,6 +118,25 @@ class RestaurantListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Restaurant
         fields = "__all__"
+
+    # review = ReviewSerializer(source="review_set", many=True)
+    # good_reviews = GoodReviewSerializer(many=True)
+
+    # def get_good_reviews(self, obj):
+    #     # Assuming that "good_reviews" is an attribute containing reviews with rating__gte=5
+    #     print(obj.good_reviews)
+    #     return TestReviewSerializer(obj.good_reviews, many=True).data
+
+    # def to_representation(self, instance):
+    #     # Call the parent class's to_representation method to get the default representation
+    #     representation = super().to_representation(instance)
+
+    #     # Add the representation of the 'good_reviews' field
+    #     representation["good_reviews"] = TestReviewSerializer(
+    #         instance.good_reviews, many=True
+    #     ).data
+
+    #     return representation
 
 
 class RestaurantDetailSerializer(serializers.ModelSerializer):
